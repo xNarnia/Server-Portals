@@ -1,0 +1,5 @@
+displayName = Server Portals
+author = Lady Narnia
+includePDB=true
+buildIgnore=.git/,.vs/,.bin/, .obj/
+version = 1.0

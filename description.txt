@@ -1,0 +1,9 @@
+Server Portals
+
+Link your multiplayer servers together with Server Portals!
+Spawn in these magical doorways and assign IP addresses to them. Simply right-click to be taken to that server!
+Make your own single-player server hub... Or share it with friends and go on an adventure!
+
+Note:
+- These portals can not be crafted and MUST be spawned in
+- Portals do not drop when broken (for security reasons)
