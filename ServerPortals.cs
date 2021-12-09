@@ -7,6 +7,8 @@ using ServerPortals.UI;
 using System.IO;
 using Terraria.DataStructures;
 using Terraria.ID;
+using ServerPortals.Tiles;
+using System;
 
 namespace ServerPortals
 {
@@ -118,8 +120,11 @@ namespace ServerPortals
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
 			MessageType type = (MessageType)reader.ReadByte();
+
 			if (type == MessageType.ClientSendTEUpdate)
 				ReceiveClientSendTEUpdate(reader, whoAmI);
+			else if (type == MessageType.ClientSendPortalPlacement)
+				ReceiveClientPortalPlacement(reader, whoAmI);
 
 			base.HandlePacket(reader, whoAmI);
 		}
@@ -154,9 +159,74 @@ namespace ServerPortals
 			}
 		}
 
+		public static void ReceiveClientPortalPlacement(BinaryReader reader, int whoAmI)
+		{
+			if (Main.netMode == 2)
+			{
+				try
+				{
+					string IP = reader.ReadString();
+					int Port = reader.ReadInt32();
+					string Name = reader.ReadString();
+					string Desc = reader.ReadString();
+					int x = reader.ReadInt32();
+					int y = reader.ReadInt32();
+
+					var instance = ModContent.GetInstance<PortalTileEntity>();
+
+					int id = instance.Find(x, y);
+
+					if (id == -1)
+					{
+						id = ModContent.GetInstance<PortalTileEntity>().Place(x, y);
+					}
+
+					PortalTileEntity tileEntity = (PortalTileEntity)TileEntity.ByID[id];
+					tileEntity.SetData(new Server()
+					{
+						IP = IP,
+						Port = Port,
+						Name = Name,
+						Description = Desc
+					});
+					NetMessage.SendData(MessageID.TileEntitySharing, -1, -1, null, id, x, y);
+				}
+				catch
+				{
+					Console.WriteLine("- Error receiving Portal Placement");
+				}
+			}
+			else if (Main.netMode == 1)
+			{
+				reader.ReadString();
+				reader.ReadInt32();
+				reader.ReadString();
+				reader.ReadString();
+				reader.ReadInt32();
+				reader.ReadInt32();
+			}
+		}
+
+		public static void ClientSendPortalPlacement(Server server, int tileX, int tileY)
+		{
+			if (Main.netMode == 1)
+			{
+				ModPacket packet = Instance.GetPacket();
+				packet.Write((byte)MessageType.ClientSendPortalPlacement);
+				packet.Write(server.IP);
+				packet.Write(server.Port);
+				packet.Write(server.Name);
+				packet.Write(server.Description);
+				packet.Write(tileX);
+				packet.Write(tileY);
+				packet.Send();
+			}
+		}
+
 		public enum MessageType : byte
 		{
-			ClientSendTEUpdate
+			ClientSendTEUpdate,
+			ClientSendPortalPlacement
 		}
 	}
 }

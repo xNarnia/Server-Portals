@@ -10,6 +10,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 using ReLogic.Graphics;
+using ServerPortals.Tiles;
 
 namespace ServerPortals.UI
 {
@@ -93,6 +94,19 @@ namespace ServerPortals.UI
 			Panel.Append(SaveButton);
 
 			Append(Panel);
+		}
+
+		public static Server GetData()
+		{
+			var output = new Server();
+
+			output.IP = ServerPortals.ServerTransferMenu.InputServerIP.Text;
+			int.TryParse(ServerPortals.ServerTransferMenu.InputServerPort.Text, out int OutPort);
+			output.Port = OutPort;
+			output.Name = ServerPortals.ServerTransferMenu.InputServerName.Text;
+			output.Description = ServerPortals.ServerTransferMenu.InputServerDescription.Text;
+
+			return output;
 		}
 
 		public override void Update(GameTime gameTime)

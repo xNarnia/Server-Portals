@@ -8,9 +8,17 @@ namespace ServerPortals.Tiles
 {
 	public interface IServerPortal
 	{
-		string ServerIP { get; set; }
-		int ServerPort { get; set; }
-		string ServerName { get; set; }
-		string ServerDescription { get; set; }
+		string IP { get; set; }
+		int Port { get; set; }
+		string Name { get; set; }
+		string Description { get; set; }
+	}
+
+	public struct Server : IServerPortal
+	{
+		public string IP { get; set; }
+		public int Port { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
 	}
 }

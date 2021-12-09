@@ -19,10 +19,10 @@ namespace ServerPortals.Tiles
 {
 	public class PortalParentTile : ModTile, IServerPortal
 	{
-		public string ServerIP { get; set; }
-		public int ServerPort { get; set; }
-		public string ServerName { get; set; }
-		public string ServerDescription { get; set; }
+		public string IP { get; set; }
+		public int Port { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
 		public int LeftPoint { get; set; }
 		public int TopPoint { get; set; }
 
@@ -82,6 +82,8 @@ namespace ServerPortals.Tiles
 			TileObjectData.addAlternate(5);
 			TileObjectData.addTile(Type);
 
+			mineResist = 500;
+
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Server Transfer Portal");
 			AddMapEntry(new Color(150, 150, 250), name);
@@ -98,36 +100,13 @@ namespace ServerPortals.Tiles
 				return false;
 			}
 
-			ServerIP = ServerPortals.ServerTransferMenu.InputServerIP.Text;
+			IP = ServerPortals.ServerTransferMenu.InputServerIP.Text;
 			int.TryParse(ServerPortals.ServerTransferMenu.InputServerPort.Text, out int OutPort);
-			ServerPort = OutPort;
-			ServerName = ServerPortals.ServerTransferMenu.InputServerName.Text;
-			ServerDescription = ServerPortals.ServerTransferMenu.InputServerDescription.Text;
+			Port = OutPort;
+			Name = ServerPortals.ServerTransferMenu.InputServerName.Text;
+			Description = ServerPortals.ServerTransferMenu.InputServerDescription.Text;
 
 			return base.CanPlace(i, j);
-		}
-
-		public override void PlaceInWorld(int i, int j, Item item)
-		{
-			Tile tile = Main.tile[i, j];
-			int left = i - tile.frameX % 36 / 18;
-			int top = j - tile.frameY / 18;
-
-			PortalTileEntity te = GetInstance<PortalTileEntity>();
-			int index = te.Find(left, top);
-			if (index == -1)
-			{
-				index = GetInstance<PortalTileEntity>().Place(left, top);
-			}
-
-			PortalTileEntity tileEntity = (PortalTileEntity)TileEntity.ByID[index];
-			tileEntity.ServerIP = ServerIP;
-			tileEntity.ServerPort = ServerPort;
-			tileEntity.ServerName = ServerName;
-			tileEntity.ServerDescription = ServerDescription;
-
-			ServerPortals.ClientSendTEUpdate(index);
-			base.PlaceInWorld(i, j, item);
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -156,10 +135,11 @@ namespace ServerPortals.Tiles
 			}
 			PortalTileEntity tileEntity = (PortalTileEntity)TileEntity.ByID[index];
 
-			Netplay.ListenPort = tileEntity.ServerPort;
-			if (Netplay.SetRemoteIP(tileEntity.ServerIP))
+			Netplay.ListenPort = tileEntity.Port;
+			if (Netplay.SetRemoteIP(tileEntity.IP))
 			{
 				PortalTileEntity.ServerSelectLock = true;
+				Main.CloseNPCChatOrSign();
 				ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectToServerIP), 1);
 			}
 			else
@@ -198,7 +178,17 @@ namespace ServerPortals.Tiles
 			string data = "a";
 			byte[] buffer = Encoding.ASCII.GetBytes(data);
 			int timeout = 1000;
-			PingReply reply = pingSender.Send(Netplay.ServerIP, timeout, buffer, options);
+
+			PingReply reply = null;
+			try
+			{
+				reply = pingSender.Send(Netplay.ServerIP, timeout, buffer, options);
+			}
+			catch
+			{
+				Main.NewText("Could not ping destination server!");
+				return;
+			}
 
 			if (reply.Status == IPStatus.Success)
 			{

@@ -42,10 +42,10 @@ namespace ServerPortals.UI
 
 		public static void UpdateLabelUsing(IServerPortal portalTile)
 		{
-			ServerIP = portalTile.ServerIP;
-			ServerPort = portalTile.ServerPort;
-			ServerName = portalTile.ServerName;
-			ServerDescription = portalTile.ServerDescription;
+			ServerIP = portalTile.IP;
+			ServerPort = portalTile.Port;
+			ServerName = portalTile.Name;
+			ServerDescription = portalTile.Description;
 		}
 	}
 }
