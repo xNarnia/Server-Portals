@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace ServerPortals.UI
 	{
 		internal string HoverText;
 
-		public Button(Texture2D texture, string hoverText) : base(texture)
+		public Button(Asset<Texture2D> texture, string hoverText) : base(texture)
 		{
 			HoverText = hoverText;
 		}

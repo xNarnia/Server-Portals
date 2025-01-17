@@ -19,7 +19,7 @@ namespace ServerPortals.Tiles
 {
 	public class EmberPortalTile : PortalParentTile, IServerPortal
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
@@ -37,13 +37,6 @@ namespace ServerPortals.Tiles
 			TileObjectData.newAlternate.AnchorAlternateTiles = new int[] { 124 };
 			TileObjectData.addAlternate(1);
 			TileObjectData.addTile(Type);
-
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("birB's Ember Gate");
-			AddMapEntry(new Color(150, 150, 250), name);
-			dustType = mod.DustType("Sparkle");
-			disableSmartCursor = true;
-			adjTiles = new int[] { Type };
 		}
 
 		public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
@@ -73,8 +66,8 @@ namespace ServerPortals.Tiles
 		public override void MouseOverFar(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
-			int left = i - tile.frameX % 54 / 18;
-			int top = j - tile.frameY / 18;
+			int left = i - tile.TileFrameX % 54 / 18;
+			int top = j - tile.TileFrameY / 18;
 
 			int index = GetInstance<PortalTileEntity>().Find(left, top);
 			if (index != -1)
@@ -84,8 +77,8 @@ namespace ServerPortals.Tiles
 
 				Player player = Main.LocalPlayer;
 				player.noThrow = 2;
-				player.showItemIcon = false;
-				GateLabelMenu.Pos = new Vector2(Main.mouseX, Main.mouseY);
+				player.cursorItemIconEnabled = false;
+				GateLabelMenu.Pos = new Vector2(Main.mouseX / Main.UIScale, Main.mouseY / Main.UIScale);
 				ServerPortals.ShowLabel();
 			}
 		}

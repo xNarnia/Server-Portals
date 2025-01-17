@@ -26,7 +26,7 @@ namespace ServerPortals.Tiles
 		public int LeftPoint { get; set; }
 		public int TopPoint { get; set; }
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
@@ -81,15 +81,6 @@ namespace ServerPortals.Tiles
 			TileObjectData.newAlternate.Origin = new Point16(0, 0);
 			TileObjectData.addAlternate(5);
 			TileObjectData.addTile(Type);
-
-			mineResist = 500;
-
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Server Transfer Portal");
-			AddMapEntry(new Color(150, 150, 250), name);
-			dustType = mod.DustType("Sparkle");
-			disableSmartCursor = true;
-			adjTiles = new int[] { Type };
 		}
 
 		public override bool CanPlace(int i, int j)
@@ -119,14 +110,14 @@ namespace ServerPortals.Tiles
 			ModContent.GetInstance<PortalTileEntity>().Kill(i, j);
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			if (PortalTileEntity.ServerSelectLock)
 				return true;
 
 			Tile tile = Main.tile[i, j];
-			int left = i - tile.frameX % 36 / 18;
-			int top = j - tile.frameY / 18;
+			int left = i - tile.TileFrameX % 36 / 18;
+			int top = j - tile.TileFrameY / 18;
 
 			int index = GetInstance<PortalTileEntity>().Find(left, top);
 			if (index == -1)
@@ -152,8 +143,8 @@ namespace ServerPortals.Tiles
 		public override void MouseOverFar(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
-			int left = i - tile.frameX % 36 / 18;
-			int top = j - tile.frameY / 18;
+			int left = i - tile.TileFrameX % 36 / 18;
+			int top = j - tile.TileFrameY / 18;
 
 			int index = GetInstance<PortalTileEntity>().Find(left, top);
 			if (index != -1)
@@ -163,8 +154,8 @@ namespace ServerPortals.Tiles
 
 				Player player = Main.LocalPlayer;
 				player.noThrow = 2;
-				player.showItemIcon = false;
-				GateLabelMenu.Pos = new Vector2(Main.mouseX, Main.mouseY);
+				player.cursorItemIconEnabled = false;
+				GateLabelMenu.Pos = new Vector2(Main.mouseX / Main.UIScale, Main.mouseY / Main.UIScale);
 				ServerPortals.ShowLabel();
 			}
 		}

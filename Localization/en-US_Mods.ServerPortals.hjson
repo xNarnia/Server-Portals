@@ -1,0 +1,30 @@
+Items: {
+	DemonEyePortalItem: {
+		DisplayName: The Eye of birB - Server Portal
+		Tooltip:
+			'''
+			[c/1DDD60:Right-click to edit Server settings]
+			[c/00FFFF:Sprite by @birB!]
+			'A dreadful eye capable of peering into other worlds.'
+			'''
+	}
+
+	EmberPortalItem: {
+		DisplayName: birB's Ember Gate - Server Portal
+		Tooltip:
+			'''
+			[c/1DDD60:Right-click to edit Server settings]
+			[c/00FFFF:Sprite by @birB!]
+			'Step into the flame.'
+			'''
+	}
+
+	PortalParentItem: {
+		DisplayName: Casual Sign - Server Portal
+		Tooltip:
+			'''
+			[c/1DDD60:Right-click to edit Server settings]
+			'Your next destination is to the right, obviously!
+			'''
+	}
+}

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.OS;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
 using Terraria.UI;
@@ -42,9 +43,9 @@ namespace ServerPortals.UI
 			OverflowHidden = true;
 		}
 
-		public override void Click(UIMouseEvent evt)
+		public override void LeftClick(UIMouseEvent evt)
 		{
-			base.Click(evt);
+			base.LeftClick(evt);
 			this.Focused = true;
 		}
 
@@ -56,7 +57,7 @@ namespace ServerPortals.UI
 			{
 				if (WidthIncludesLabel)
 				{
-					Left.Pixels += Main.fontMouseText.MeasureString(Label).X;
+					Left.Pixels += FontAssets.MouseText.Value.MeasureString(Label).X;
 				}
 
 				AdjustedForLabel = true;
@@ -81,7 +82,7 @@ namespace ServerPortals.UI
 				TotalSeconds = gameTime.TotalGameTime.TotalSeconds;
 			}
 
-			var TextMeasure = Main.fontMouseText.MeasureString(Text);
+			var TextMeasure = FontAssets.MouseText.Value.MeasureString(Text);
 			if (TextMeasure.X > Width.Pixels - PaddingLeft - PaddingRight)
 			{
 				OffsetX = TextMeasure.X - (Width.Pixels - PaddingLeft - PaddingRight);
@@ -145,7 +146,7 @@ namespace ServerPortals.UI
 
 			if (Label != "")
 			{
-				Pos.X -= Main.fontMouseText.MeasureString(Label).X + PaddingLeft;
+				Pos.X -= FontAssets.MouseText.Value.MeasureString(Label).X + PaddingLeft;
 				Utils.DrawBorderString(spriteBatch, Label, Pos + GetCenterOffsetY(Height.Pixels, 18f), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor));
 			}
 		}

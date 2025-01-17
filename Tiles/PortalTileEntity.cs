@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -36,44 +37,41 @@ namespace ServerPortals.Tiles
 			Description = server.Description;
 		}
 
-		public override void NetReceive(BinaryReader reader, bool lightReceive)
+		public override void NetReceive(BinaryReader reader)
 		{
-			base.NetReceive(reader, lightReceive);
+			base.NetReceive(reader);
 			IP = reader.ReadString();
 			Port = reader.ReadInt32();
 			Name = reader.ReadString();
 			Description = reader.ReadString();
 		}
 
-		public override void NetSend(BinaryWriter writer, bool lightSend)
+		public override void NetSend(BinaryWriter writer)
 		{
-			base.NetSend(writer, lightSend);
+			base.NetSend(writer);
 			writer.Write(IP);
 			writer.Write(Port);
 			writer.Write(Name);
 			writer.Write(Description);
 		}
-
-		public override TagCompound Save()
+		
+		public override void SaveData(TagCompound tag)
 		{
-			return new TagCompound
-			{
-				{"ServerIP", IP},
-				{"ServerPort", Port},
-				{"ServerName", Name},
-				{"ServerDescription", Description}
-			};
+			tag["PortalServerIP"] = IP;
+			tag["PortalServerPort"] = Port;
+			tag["PortalServerName"] = Name;
+			tag["PortalServerDescription"] = Description;
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadData(TagCompound tag)
 		{
-			IP = tag.Get<string>("ServerIP");
-			Port = tag.Get<int>("ServerPort");
-			Name = tag.Get<string>("ServerName");
-			Description = tag.Get<string>("ServerDescription");
+			IP = tag.Get<string>("PortalServerIP");
+			Port = tag.Get<int>("PortalServerPort");
+			Name = tag.Get<string>("PortalServerName");
+			Description = tag.Get<string>("PortalServerDescription");
 		}
 
-		public override bool ValidTile(int i, int j)
+		public override bool IsTileValidForEntity(int i, int j)
 		{
 			List<int> validTiles = new List<int>();
 			validTiles.Add(ModContent.TileType<PortalParentTile>());
@@ -81,18 +79,18 @@ namespace ServerPortals.Tiles
 			validTiles.Add(ModContent.TileType<DemonEyePortalTile>());
 
 			Tile tile = Main.tile[i, j];
-			return tile.active() && validTiles.Contains(tile.type) && tile.frameX == 0 && tile.frameY == 0;
+			return tile.HasTile && validTiles.Contains(tile.TileType) && tile.TileFrameX == 0 && tile.TileFrameY == 0;
 		}
 
-		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
+		public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
 		{
 			Tile tile = Main.tile[i, j];
-			int left = i - tile.frameX % 36 / 18;
-			int top = j - tile.frameY / 18;
+			int left = i - tile.TileFrameX % 36 / 18;
+			int top = j - tile.TileFrameY / 18;
 
 			if (Main.netMode == 1)
 			{
-				NetMessage.SendTileRange(Main.myPlayer, i, j, 3, 6);
+				NetMessage.SendTileSquare(Main.myPlayer, i, j, 3, 6);
 				NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, left, top, type);
 				ServerPortals.ClientSendPortalPlacement(ServerTransferCreationMenu.GetData(), i, j);
 				return -1;

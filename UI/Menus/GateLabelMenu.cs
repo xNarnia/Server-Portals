@@ -36,8 +36,15 @@ namespace ServerPortals.UI
 		{
 			base.Draw(spriteBatch);
 			BlueTextByte = (byte)(Main.mouseTextColor - (255 - 150));
-			Utils.DrawBorderString(Main.spriteBatch, $"Teleport to Server", Pos + new Vector2(16, 16), new Color(BlueTextByte, BlueTextByte, Main.mouseTextColor, Main.mouseTextColor));
-			Utils.DrawBorderString(Main.spriteBatch, $"{ServerName}\nIP: {ServerIP}:{ServerPort.ToString()}\n{ServerDescription}", Pos + new Vector2(16, 40), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor));
+
+			Utils.DrawBorderString(Main.spriteBatch, $"Teleport to Server", 
+				Pos + new Vector2(16, 16), 
+				new Color(BlueTextByte, BlueTextByte, Main.mouseTextColor, Main.mouseTextColor));
+
+			Utils.DrawBorderString(Main.spriteBatch, 
+				$"{ServerName}\nIP: {ServerIP}:{ServerPort.ToString()}\n{ServerDescription}", 
+				Pos + new Vector2(16, 40), 
+				new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor));
 		}
 
 		public static void UpdateLabelUsing(IServerPortal portalTile)

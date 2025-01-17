@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using ReLogic.Graphics;
 using ServerPortals.Tiles;
+using Terraria.GameContent;
 
 namespace ServerPortals.UI
 {
@@ -82,7 +83,7 @@ namespace ServerPortals.UI
 			ClearButton.Height.Set(36, 0f);
 			ClearButton.Left.Set(0, 0f);
 			ClearButton.Top.Set(CalculateButtonHeight(ClearButton), 0f);
-			ClearButton.OnClick += new MouseEvent(ClearButtonClicked);
+			ClearButton.OnLeftClick += new MouseEvent(ClearButtonClicked);
 			Panel.Append(ClearButton);
 
 			SaveButton = new TextButton("Save"); 
@@ -90,7 +91,7 @@ namespace ServerPortals.UI
 			SaveButton.Height.Set(36, 0f);
 			SaveButton.Left.Set(CalculateButtonWidth(SaveButton), 0f);
 			SaveButton.Top.Set(CalculateButtonHeight(SaveButton), 0f);
-			SaveButton.OnClick += new MouseEvent(SaveButtonClicked);
+			SaveButton.OnLeftClick += new MouseEvent(SaveButtonClicked);
 			Panel.Append(SaveButton);
 
 			Append(Panel);
@@ -133,7 +134,7 @@ namespace ServerPortals.UI
 			Utils.DrawBorderStringBig(
 				spriteBatch, 
 				"Server Transfer Portal", 
-				new Vector2(Panel.Left.Pixels + Panel.PaddingLeft + Panel.Width.Pixels / 2 - Main.fontMouseText.MeasureString("Server Transfer Portal").X + 32, Panel.Top.Pixels + Panel.PaddingTop - 24), 
+				new Vector2(Panel.Left.Pixels + Panel.PaddingLeft + Panel.Width.Pixels / 2 - FontAssets.MouseText.Value.MeasureString("Server Transfer Portal").X + 32, Panel.Top.Pixels + Panel.PaddingTop - 24), 
 				new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor),
 				0.6f);
 		}

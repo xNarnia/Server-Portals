@@ -9,6 +9,7 @@ using Terraria.UI;
 using ReLogic.Graphics;
 using Terraria;
 using Microsoft.Xna.Framework;
+using Terraria.GameContent;
 
 namespace ServerPortals.UI
 {
@@ -47,7 +48,7 @@ namespace ServerPortals.UI
 					+ Top.Pixels
 					+ PaddingTop);
 
-			Utils.DrawBorderString(Main.spriteBatch, Label, Pos + new Vector2(Width.Pixels / 2 - Main.fontMouseText.MeasureString(Label).X / 2, Height.Pixels / 2 - 9f), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor));
+			Utils.DrawBorderString(Main.spriteBatch, Label, Pos + new Vector2(Width.Pixels / 2 - FontAssets.MouseText.Value.MeasureString(Label).X / 2, Height.Pixels / 2 - 9f), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor));
 		}
 	}
 }

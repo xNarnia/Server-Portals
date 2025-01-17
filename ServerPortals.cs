@@ -14,12 +14,12 @@ namespace ServerPortals
 {
 	public class ServerPortals : Mod
 	{
-		public static ServerPortals Instance;
-		internal static GateLabelMenu GateLabel;
-		internal static ServerTransferCreationMenu ServerTransferMenu;
+		public static ServerPortals Instance { get; private set; }
+		public static GateLabelMenu GateLabel { get; set; }
+		public static ServerTransferCreationMenu ServerTransferMenu { get; set; }
 
-		private static UserInterface _gateLabelUI;
-		private static UserInterface _serverTransferUI;
+		public static UserInterface _gateLabelUI {  get; set; }
+		public static UserInterface _serverTransferUI {  get; set; }
 
 		public static bool ShowText;
 		public static string Text;
@@ -91,30 +91,6 @@ namespace ServerPortals
 			base.PostSetupContent();
 		}
 
-		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-		{
-			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-			if (inventoryIndex != -1)
-			{
-				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
-					"WorldLink: UI",
-					delegate 
-					{
-						_gateLabelUI.Draw(Main.spriteBatch, new GameTime());
-						_serverTransferUI.Draw(Main.spriteBatch, new GameTime());
-						return true;
-					},
-					InterfaceScaleType.UI)  
-				);
-			}
-		}
-
-		public override void UpdateUI(GameTime gameTime)
-		{
-			_gateLabelUI?.Update(gameTime);
-			_serverTransferUI?.Update(gameTime);
-			HideLabel();
-		}
 
 		// Everything below is courtesy of the amazing Blushiemagic and her Magic Storage GitHub repo
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
