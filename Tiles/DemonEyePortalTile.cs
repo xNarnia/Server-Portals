@@ -15,10 +15,11 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
+using ServerPortals.TileEntities;
 
 namespace ServerPortals.Tiles
 {
-	public class DemonEyePortalTile : PortalParentTile, IServerPortal
+    public class DemonEyePortalTile : PortalParentTile, IServerPortal
 	{
 		public override void SetStaticDefaults()
 		{
@@ -31,7 +32,8 @@ namespace ServerPortals.Tiles
 			TileObjectData.newTile.Height = 5;
 
 			// We set processedCoordinates to true so our Hook_AfterPlacement gets top left coordinates, regardless of Origin.
-			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<PortalTileEntity>().Hook_AfterPlacement, -1, 0, true);
+			// Sends data to the server in multiplayer servers
+			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<ServerPortalTileEntity>().Hook_AfterPlacement, -1, 0, true);
 
 			// Allow attaching sign to the ground
 			TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
@@ -44,6 +46,7 @@ namespace ServerPortals.Tiles
 		{
 			frameXOffset = Main.tileFrame[Type] % 4 * 54;
 		}
+
 		public override void AnimateTile(ref int frame, ref int frameCounter)
 		{
 			if (++frameCounter >= 10)
@@ -57,26 +60,6 @@ namespace ServerPortals.Tiles
 			r = 40 / 255;
 			g = 40 / 255;
 			b = 40 / 255;
-		}
-
-		public override void MouseOverFar(int i, int j)
-		{
-			Tile tile = Main.tile[i, j];
-			int left = i - tile.TileFrameX % 54 / 18;
-			int top = j - tile.TileFrameY / 18;
-
-			int index = GetInstance<PortalTileEntity>().Find(left, top);
-			if (index != -1)
-			{
-				PortalTileEntity tileEntity = (PortalTileEntity)TileEntity.ByID[index];
-				GateLabelMenu.UpdateLabelUsing(tileEntity);
-
-				Player player = Main.LocalPlayer;
-				player.noThrow = 2;
-				player.cursorItemIconEnabled = false;
-				GateLabelMenu.Pos = new Vector2(Main.mouseX / Main.UIScale, Main.mouseY / Main.UIScale);
-				ServerPortals.ShowLabel();
-			}
 		}
 	}
 }

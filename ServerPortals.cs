@@ -9,46 +9,57 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using ServerPortals.Tiles;
 using System;
+using System.Threading;
+using System.Net.NetworkInformation;
+using System.Text;
+using Ionic.Zlib;
+using System.Reflection;
+using System.Windows.Input;
+using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ServerPortals.TileEntities;
 
 namespace ServerPortals
 {
-	public class ServerPortals : Mod
+    public class ServerPortals : Mod
 	{
-		public static ServerPortals Instance { get; private set; }
-		public static GateLabelMenu GateLabel { get; set; }
-		public static ServerTransferCreationMenu ServerTransferMenu { get; set; }
+		public static ServerPortals ServerPortalsMod { get; private set; }
+		public GateLabelMenu GateLabel { get; set; }
+		public ServerTransferCreationMenu ServerTransferMenu { get; set; }
+		public List<int> PortalTileTypes { get; set; }
 
-		public static UserInterface _gateLabelUI {  get; set; }
-		public static UserInterface _serverTransferUI {  get; set; }
+		public UserInterface _gateLabelUI {  get; set; }
+		public UserInterface _serverTransferUI {  get; set; }
 
-		public static bool ShowText;
-		public static string Text;
-		public static Vector2 Pos;
+		public bool ShowText;
+		public string Text;
+		public Vector2 Pos;
 
 		public ServerPortals()
 		{
+			PortalTileTypes = new List<int>();
 			Pos = Vector2.Zero;
 		}
 
-		public static void OpenMenu()
+		public void OpenMenu()
 		{
 			if(_serverTransferUI.CurrentState != ServerTransferMenu)
 				_serverTransferUI.SetState(ServerTransferMenu);
 		}
 
-		public static void CloseMenu()
+		public void CloseMenu()
 		{
 			if (_serverTransferUI.CurrentState != null)
 				_serverTransferUI.SetState(null);
 		}
 
-		public static void ShowLabel()
+		public void ShowLabel()
 			=> _gateLabelUI.SetState(GateLabel);
 
-		public static void HideLabel()
+		public void HideLabel()
 			=> _gateLabelUI.SetState(null);
 
-		public static bool DataIsValid()
+		public bool DataIsValid()
 		{
 			int.TryParse(ServerTransferMenu.InputServerPort.Text, out int OutPort);
 
@@ -62,9 +73,82 @@ namespace ServerPortals
 			return true;
 		}
 
-		public override void Load()
+		public bool MenuIsOpen() => _serverTransferUI.CurrentState == ServerTransferMenu;
+
+		public void JoinServer(string remoteAddress, int port)
 		{
-			Instance = this;
+            Netplay.ListenPort = port;
+            if (Netplay.SetRemoteIP(remoteAddress))
+            {
+                ServerPortalTileEntity.ServerSelectLock = true;
+                Main.CloseNPCChatOrSign();
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectToServerIP), 1);
+            }
+            else
+            {
+                Main.NewText("Could not find server!");
+            }
+        }
+
+        private void ConnectToServerIP(object threadContext)
+        {
+            Ping pingSender = new Ping();
+            PingOptions options = new PingOptions();
+            options.DontFragment = true;
+
+            string data = "a";
+            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            int timeout = 1000;
+
+            PingReply reply = null;
+            try
+            {
+                reply = pingSender.Send(Netplay.ServerIP, timeout, buffer, options);
+            }
+            catch
+            {
+                Main.NewText("Could not ping destination server!");
+                return;
+            }
+
+            if (reply.Status == IPStatus.Success)
+            {
+                WorldGen.SaveAndQuit(() =>
+                {
+                    Main.menuMode = 10;
+                    Netplay.StartTcpClient();
+                });
+            }
+            else
+            {
+                Main.NewText("Ping to server timed out!");
+            }
+
+            ServerPortalTileEntity.ServerSelectLock = false;
+        }
+
+		/// <summary>
+		/// Scans for all ServerPortalTiles in supplied Mod object
+		/// </summary>
+		/// <param name="mod">The mod to scan for ServerPortalTiles in.</param>
+        public void ScanForPortals(Mod mod)
+		{
+            foreach (Type type in Assembly.GetAssembly(mod.GetType()).GetTypes())
+            {
+                if (typeof(ServerPortalTile).IsAssignableFrom(type) && !type.IsAbstract && type.IsClass)
+                {
+					// Supply type at runtime by using reflection to find the ModContent.TileType method and invoking it
+                    MethodInfo method = typeof(ModContent).GetMethod("TileType", BindingFlags.Public | BindingFlags.Static);
+                    MethodInfo genericMethod = method.MakeGenericMethod(type);
+
+                    PortalTileTypes.Add((int)genericMethod.Invoke(null, null));
+                }
+            }
+        }
+
+        public override void Load()
+		{
+			ServerPortalsMod = this;
 			
 			GateLabel = new GateLabelMenu();
 			GateLabel.Activate();
@@ -89,8 +173,8 @@ namespace ServerPortals
 		public override void PostSetupContent()
 		{
 			base.PostSetupContent();
-		}
 
+		}
 
 		// Everything below is courtesy of the amazing Blushiemagic and her Magic Storage GitHub repo
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -105,7 +189,7 @@ namespace ServerPortals
 			base.HandlePacket(reader, whoAmI);
 		}
 
-		public static void ReceiveClientSendTEUpdate(BinaryReader reader, int sender)
+		public void ReceiveClientSendTEUpdate(BinaryReader reader, int sender)
 		{
 			if (Main.netMode == 2)
 			{
@@ -123,11 +207,11 @@ namespace ServerPortals
 			}
 		}
 
-		public static void ClientSendTEUpdate(int id)
+		public void ClientSendTEUpdate(int id)
 		{
 			if (Main.netMode == 1)
 			{
-				ModPacket packet = Instance.GetPacket();
+				ModPacket packet = ServerPortalsMod.GetPacket();
 				packet.Write((byte)MessageType.ClientSendTEUpdate);
 				packet.Write(id);
 				TileEntity.Write(packet, TileEntity.ByID[id], true);
@@ -135,7 +219,7 @@ namespace ServerPortals
 			}
 		}
 
-		public static void ReceiveClientPortalPlacement(BinaryReader reader, int whoAmI)
+		public void ReceiveClientPortalPlacement(BinaryReader reader, int whoAmI)
 		{
 			if (Main.netMode == 2)
 			{
@@ -148,16 +232,16 @@ namespace ServerPortals
 					int x = reader.ReadInt32();
 					int y = reader.ReadInt32();
 
-					var instance = ModContent.GetInstance<PortalTileEntity>();
+					var instance = ModContent.GetInstance<ServerPortalTileEntity>();
 
 					int id = instance.Find(x, y);
 
 					if (id == -1)
 					{
-						id = ModContent.GetInstance<PortalTileEntity>().Place(x, y);
+						id = ModContent.GetInstance<ServerPortalTileEntity>().Place(x, y);
 					}
 
-					PortalTileEntity tileEntity = (PortalTileEntity)TileEntity.ByID[id];
+					ServerPortalTileEntity tileEntity = (ServerPortalTileEntity)TileEntity.ByID[id];
 					tileEntity.SetData(new Server()
 					{
 						IP = IP,
@@ -183,11 +267,11 @@ namespace ServerPortals
 			}
 		}
 
-		public static void ClientSendPortalPlacement(Server server, int tileX, int tileY)
+		public void ClientSendPortalPlacement(Server server, int tileX, int tileY)
 		{
 			if (Main.netMode == 1)
 			{
-				ModPacket packet = Instance.GetPacket();
+				ModPacket packet = ServerPortalsMod.GetPacket();
 				packet.Write((byte)MessageType.ClientSendPortalPlacement);
 				packet.Write(server.IP);
 				packet.Write(server.Port);

@@ -12,6 +12,7 @@ using Terraria.UI;
 using ReLogic.Graphics;
 using ServerPortals.Tiles;
 using Terraria.GameContent;
+using static ServerPortals.ServerPortals;
 
 namespace ServerPortals.UI
 {
@@ -26,7 +27,6 @@ namespace ServerPortals.UI
 		public InputBox InputServerPort;
 		public InputBox InputServerName;
 		public InputBox InputServerDescription;
-
 
 		UIPanel Panel;
 		UIPanel HeaderBorderPanel;
@@ -101,11 +101,11 @@ namespace ServerPortals.UI
 		{
 			var output = new Server();
 
-			output.IP = ServerPortals.ServerTransferMenu.InputServerIP.Text;
-			int.TryParse(ServerPortals.ServerTransferMenu.InputServerPort.Text, out int OutPort);
+			output.IP = ServerPortalsMod.ServerTransferMenu.InputServerIP.Text;
+			int.TryParse(ServerPortalsMod.ServerTransferMenu.InputServerPort.Text, out int OutPort);
 			output.Port = OutPort;
-			output.Name = ServerPortals.ServerTransferMenu.InputServerName.Text;
-			output.Description = ServerPortals.ServerTransferMenu.InputServerDescription.Text;
+			output.Name = ServerPortalsMod.ServerTransferMenu.InputServerName.Text;
+			output.Description = ServerPortalsMod.ServerTransferMenu.InputServerDescription.Text;
 
 			return output;
 		}
@@ -149,7 +149,7 @@ namespace ServerPortals.UI
 
 		private void SaveButtonClicked(UIMouseEvent evt, UIElement listeningElement)
 		{
-			ServerPortals.CloseMenu();
+            ServerPortalsMod.CloseMenu();
 		}
 		
 		private float CalculateButtonWidth(UIPanel button)

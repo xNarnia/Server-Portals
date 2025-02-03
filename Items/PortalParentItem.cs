@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using static ServerPortals.ServerPortals;
 
 namespace ServerPortals.Items
 {
@@ -31,7 +32,7 @@ namespace ServerPortals.Items
 		{
 			if (player.altFunctionUse == 2)
 			{
-				ServerPortals.OpenMenu();
+				ServerPortalsMod.OpenMenu();
 				return false;
 			}
 			else

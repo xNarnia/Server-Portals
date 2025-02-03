@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
+using static ServerPortals.ServerPortals;
 
 namespace ServerPortals.UI
 {
@@ -22,8 +23,8 @@ namespace ServerPortals.UI
 					"ServerPortals: UI",
 					delegate
 					{
-						ServerPortals._gateLabelUI.Draw(Main.spriteBatch, new GameTime());
-						ServerPortals._serverTransferUI.Draw(Main.spriteBatch, new GameTime());
+                        ServerPortalsMod._gateLabelUI.Draw(Main.spriteBatch, new GameTime());
+                        ServerPortalsMod._serverTransferUI.Draw(Main.spriteBatch, new GameTime());
 						return true;
 					},
 					InterfaceScaleType.UI)
@@ -33,9 +34,9 @@ namespace ServerPortals.UI
 
 		public override void UpdateUI(GameTime gameTime)
 		{
-			ServerPortals._gateLabelUI?.Update(gameTime);
-			ServerPortals._serverTransferUI?.Update(gameTime);
-			ServerPortals.HideLabel();
+            ServerPortalsMod._gateLabelUI?.Update(gameTime);
+            ServerPortalsMod._serverTransferUI?.Update(gameTime);
+            ServerPortalsMod.HideLabel();
 		}
 	}
 }
