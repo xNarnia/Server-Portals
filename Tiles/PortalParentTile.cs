@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using static ServerPortals.ServerPortals;
 using ServerPortals.TileEntities;
+using Terraria.GameContent;
 
 namespace ServerPortals.Tiles
 {
@@ -76,6 +77,11 @@ namespace ServerPortals.Tiles
 			TileObjectData.newAlternate.Origin = new Point16(0, 0);
 			TileObjectData.addAlternate(5);
 			TileObjectData.addTile(Type);
+		}
+
+		public override bool CanDrop(int i, int j)
+		{
+			return false;
 		}
 	}
 }
