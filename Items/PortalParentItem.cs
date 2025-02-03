@@ -44,5 +44,7 @@ namespace ServerPortals.Items
 		public override void RightClick(Player player)
 		{
 		}
+
+		public override bool IsLoadingEnabled(Mod mod) => GetInstance<Config>().LoadIncludedPortals;
 	}
 }

@@ -18,12 +18,14 @@ using System.Windows.Input;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ServerPortals.TileEntities;
+using tModPorter;
 
 namespace ServerPortals
 {
     public class ServerPortals : Mod
 	{
 		public static ServerPortals ServerPortalsMod { get; private set; }
+		public Config Config { get; set; }
 		public GateLabelMenu GateLabel { get; set; }
 		public ServerTransferCreationMenu ServerTransferMenu { get; set; }
 		public List<int> PortalTileTypes { get; set; }
@@ -90,6 +92,14 @@ namespace ServerPortals
             }
         }
 
+		public void SetServerInfo(string serverIP, int serverPort, string serverName = "", string serverDesc = "")
+		{
+			ServerTransferMenu.InputServerIP.Text = serverIP;
+			ServerTransferMenu.InputServerPort.Text = serverPort.ToString();
+			ServerTransferMenu.InputServerName.Text = serverName;
+			ServerTransferMenu.InputServerDescription.Text = serverDesc;
+		}
+
         private void ConnectToServerIP(object threadContext)
         {
             Ping pingSender = new Ping();
@@ -149,7 +159,9 @@ namespace ServerPortals
         public override void Load()
 		{
 			ServerPortalsMod = this;
-			
+
+			Config = ModContent.GetInstance<Config>();
+
 			GateLabel = new GateLabelMenu();
 			GateLabel.Activate();
 
