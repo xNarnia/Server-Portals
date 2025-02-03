@@ -1,0 +1,16 @@
+Items: {
+	ExamplePortalItem: {
+		DisplayName: Example Portal
+		Tooltip: ""
+	}
+
+	ExamplePlaceablePortalItem: {
+		DisplayName: Example Placeable Portal
+		Tooltip: ""
+	}
+
+	ExamplePlaceablePrefilledPortalItem: {
+		DisplayName: Example Placeable Prefilled Portal
+		Tooltip: ""
+	}
+}

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Import tModLoader mod properties -->
+	<Import Project="..\tModLoader.targets" />
+
+	<!-- General -->
+	<PropertyGroup>
+		
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Items\ExamplePlaceablePrefilledPortalItem.png" />
+	  <None Remove="Tiles\ExamplePlaceablePortalTile.png" />
+	  <None Remove="Tiles\ExamplePlaceablePrefilledPortalTile.png" />
+	</ItemGroup>
+
+	<!-- References -->
+	<ItemGroup>
+	  <Reference Include="ServerPortals">
+	    <HintPath>lib\ServerPortals.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+</Project>

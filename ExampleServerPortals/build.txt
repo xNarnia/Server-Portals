@@ -1,0 +1,5 @@
+displayName = Example ServerPortals
+author = Narnia
+modReferences=ServerPortals
+sortAfter=ServerPortals@1.1
+version = 0.1
