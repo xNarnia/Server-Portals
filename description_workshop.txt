@@ -1,0 +1,18 @@
+[h1]Server Portals[/h1]
+
+Link your multiplayer servers together with Server Portals!
+Spawn in these magical doorways and assign IP addresses to them. Simply right-click to be taken to that server!
+Make your own single-player server hub... Or share it with friends and go on an adventure!
+
+Connect the world with Server Portals!
+* [url=https://discord.gg/xAQGT4VetN]Discord Support Server[/url]
+* [url=https://github.com/xNarnia/ServerPortals]Source Code[/url]
+
+Want to add your own portal sprites or functionality? Check out the example mod here!
+* [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3420353043]Example Mod[/url]
+* [url=https://github.com/xNarnia/ExampleServerPortals]Source Code[/url]
+
+Note:
+- These portals can not be crafted and MUST be spawned in
+- Portals do not drop when broken (for security reasons)[quote=tModLoader ServerPortals]
+Developed By Lady Narnia[/quote]
