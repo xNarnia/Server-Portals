@@ -2,5 +2,5 @@ displayName = Server Portals
 author = Lady Narnia
 homepage = https://forums.terraria.org/index.php?threads/server-portals-create-portals-to-multiplayers-servers-directly-in-your-world.109793/
 includePDB=true
-buildIgnore=.git/,.vs/,.bin/, .obj/, .ExampleServerPortals/
+buildIgnore=.git/,.vs/,.bin/, .obj/
 version = 1.1
