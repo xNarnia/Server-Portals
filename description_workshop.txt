@@ -12,7 +12,10 @@ Want to add your own portal sprites or functionality? Check out the example mod 
 * [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3420353043]Example Mod[/url]
 * [url=https://github.com/xNarnia/ExampleServerPortals]Source Code[/url]
 
+Thank you!
+* qAngel - For the Server Portal sprite!
+* birB - For your cool alternate portal sprites!
+
 Note:
 - These portals can not be crafted and MUST be spawned in
-- Portals do not drop when broken (for security reasons)[quote=tModLoader ServerPortals]
-Developed By Lady Narnia[/quote]
+- Portals do not drop when broken (for security reasons)

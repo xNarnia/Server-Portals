@@ -4,7 +4,7 @@ Items: {
 		Tooltip:
 			'''
 			[c/1DDD60:Right-click to edit Server settings]
-			[c/00FFFF:Sprite by @birB!]
+			[c/00FFFF:Sprite by birB!]
 			'A dreadful eye capable of peering into other worlds.'
 			'''
 	}
@@ -14,7 +14,7 @@ Items: {
 		Tooltip:
 			'''
 			[c/1DDD60:Right-click to edit Server settings]
-			[c/00FFFF:Sprite by @birB!]
+			[c/00FFFF:Sprite by birB!]
 			'Step into the flame.'
 			'''
 	}
@@ -27,6 +27,16 @@ Items: {
 			'Your next destination is to the right, obviously!
 			'''
 	}
+
+	BlueServerPortalItem: {
+		DisplayName: Server Portal
+		Tooltip:
+			'''
+			[c/1DDD60:Right-click to edit Server settings]
+			[c/00FFFF:Sprite by qAngel!]
+			Place down to setup a teleporter to a new server!
+			'''
+	}
 }
 
 Configs: {
@@ -36,7 +46,7 @@ Configs: {
 
 		LoadIncludedPortals: {
 			Label: Load Included Portals
-			Tooltip: ""
+			Tooltip: Enable or disable portals included in this mod.
 		}
 	}
 }

@@ -42,7 +42,6 @@ namespace ServerPortals.Tiles
             return base.CanPlace(i, j);
         }
 
-
         public override void NumDust(int i, int j, bool fail, ref int num)
         {
             num = 1;

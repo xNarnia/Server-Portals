@@ -171,6 +171,8 @@ namespace ServerPortals
 			_serverTransferUI = new UserInterface();
 			_gateLabelUI = new UserInterface();
 
+			ScanForPortals(this);
+
 			base.Load();
 		}
 
